@@ -1,9 +1,13 @@
+from decimal import *
+
+getcontext().prec = 6
+
 # 交易总额
-money = 200
+money = Decimal(200)
 print("交易总额", money)
 
 # 交易次数
-n = 10
+n = 5
 print("交易次数", n)
 
 # 每次交易金额
@@ -11,11 +15,12 @@ per_money = money / n
 print("每次交易金额", per_money)
 
 # 进场价格
-base_price=100
+base_price=Decimal(100)
 print("进场价格", base_price)
 
 # 交易间隔
-interval = 0.01
+interval = Decimal("0.01")
+print("交易间隔", interval)
 
 print("----------")
 
