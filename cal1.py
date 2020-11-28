@@ -1,46 +1,47 @@
 from decimal import *
 
-getcontext().prec = 6
+getcontext().prec = 7
 
-money = Decimal(300)
-print("交易总额", money)
+total_money = Decimal(200)
+print("交易总额", total_money)
 
-n = 5
+n = 4
 print("交易次数", n)
 
-per_money = Decimal(money) / Decimal(n)
-print("每次交易金额", per_money)
+unit_money = Decimal(total_money) / Decimal(n)
+print("单位金额", unit_money)
 
-base_price = Decimal(18000)
+base_price = Decimal(100)
 print("进场价格", base_price)
 
 interval = Decimal("0.01")
-print("交易间隔", Decimal(interval) * Decimal(100), "%")
+print("交易间隔 {:.2f}%".format(Decimal(interval) * Decimal(100)))
 
-print("----------")
+print("-" * 36)
 
 for i in range(n):
-    print("第 %d 次交易" % (i + 1))
 
-    buy_price = Decimal(base_price) * ( Decimal(1) + Decimal(interval) * Decimal(i) )
-    print("买入价格", buy_price)
+    print("第 {} 次交易".format(i + 1))
 
-    average_price = ( Decimal(base_price) + Decimal(buy_price) ) / Decimal(2)
-    print("平均价格", average_price)
+    buy_price = Decimal(base_price) * (Decimal(1) +
+                                       Decimal(interval) * Decimal(i))
+    print("买入价格 {:.2f}".format(buy_price))
 
-    sum_money = Decimal(per_money) * Decimal(i + 1)
-    print("仓位资金", sum_money)
+    average_price = (Decimal(base_price) + Decimal(buy_price)) / Decimal(2)
+    print("持仓均价 {:.2f}".format(average_price))
 
-    baocang_distance = Decimal(money) / Decimal(sum_money)
-    print("平均价格与爆仓价格距离（百分比）", baocang_distance, "%")
+    position_money = Decimal(unit_money) * Decimal(i + 1)
+    print("仓位资金 {:.2f}".format(position_money))
+
+    average_price_blow_up_points = Decimal(total_money) / Decimal(position_money)
+    print("持仓均价爆仓点数 {:.2f}%".format(average_price_blow_up_points))
+
+    # 爆仓价格
+    # 计算公式：持仓均价 * (1 - 爆仓点数 / 100)
+    blow_up_price = Decimal(average_price) * (1 - (Decimal(average_price_blow_up_points) / Decimal(100)))
+    print("爆仓价格 {:.2f}".format(blow_up_price))
     
-    # 平均成本与爆仓价格的距离 
-    # 计算公式：平均成本 * (100 - 爆仓幅度) / 100
-    # baocang_price = Decimal(average_price) * ( Decimal(100) - Decimal(baocang_distance) ) / Decimal(100)
-    baocang_price = Decimal(average_price) * ( 1 - ( Decimal(baocang_distance) / Decimal(100) ) )
-    print("爆仓价格", baocang_price)
-
-    # 计算公式：当前价格 * (100 - 爆仓幅度) / 100
-    current_price_distance = Decimal(1) - Decimal(baocang_price) / Decimal(buy_price)
-    print("当前价格与爆仓价格距离（百分比）", Decimal(current_price_distance) * Decimal(100), "%")
-    print("----------")
+    # 计算公式：1 - 爆仓价格 / 买入价格
+    buy_price_blow_up_points = (Decimal(1) - Decimal(blow_up_price) / Decimal(buy_price)) * Decimal(100)
+    print("买入价格爆仓点数 {:.2f}%".format(buy_price_blow_up_points))
+    print("-" * 36)
